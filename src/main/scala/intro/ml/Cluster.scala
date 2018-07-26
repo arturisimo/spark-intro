@@ -23,7 +23,16 @@ import scala.math.pow
  * Ejecutar
  *    $ /home/training/workspace/spark-intro mvn clean package
  *    $ spark2-submit --class intro.rdd.Cluster --master yarn --conf spark.default.parallelism=4  target/spark-intro-1.0.jar k-points
+ *    
  * 
+ * PERSISTENCIA o CACHEO
+ * Se puede persistir los DataFrame, Dataset, or RDD
+ * Se almacena en memoria o disco solo 
+ * Se consigue mejorar el rendimiento
+ * Se usa si usamos una query varias veces
+ * 
+ * Tables and views can be persisted in memory using CACHE TABLE
+ * spark.sql("CACHE TABLE people")
  */
 
 object Cluster extends App {
@@ -47,8 +56,9 @@ object Cluster extends App {
   case class Point(lat: Double, long: Double)
   
   val spark = SparkSession.builder.getOrCreate()
+  val sc  = spark.sparkContext
   
-  val devicestatusETL = spark.sparkContext.textFile("/loudacre/devicestatus_etl")
+  val devicestatusETL = sc.textFile("/loudacre/devicestatus_etl")
   
   val points = devicestatusETL.map(line => line.split(","))
                               .map(fields => Point(fields(3).toDouble, fields(4).toDouble))

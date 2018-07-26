@@ -32,13 +32,9 @@ object Golf extends App {
     val inputDF = spark.read.format("csv").option("inferSchema", "true").option("header", "true").load("/loudacre/golf.csv") //CSV
     
     //Crear árbol
-
-
-    val model = DecisionTree.trainClassifier(data=datos, numClasses=2,  categoricalFeaturesInfo={0: 3})
-    
-    println(model.toDebugString())
-    
-    println(model.predict([1.0, 85, 85, True]))
+    //val model = DecisionTree.trainClassifier(data=datos, numClasses=2,  categoricalFeaturesInfo={0: 3})
+    //println(model.toDebugString())
+    //println(model.predict([1.0, 85, 85, True]))
     
     
     spark.stop()
