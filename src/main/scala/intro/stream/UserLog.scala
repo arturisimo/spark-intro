@@ -11,6 +11,7 @@ import org.apache.spark.streaming.Seconds
  * Procesa cada batch en un RDD. Las operaciones y transformaciones son las del RDD
  * Devuelve de la operaciones de cada RDD
  * 
+ * DOC: https://spark.apache.org/docs/latest/streaming-programming-guide.html
  * 
  * Genera un DStream a partir de un flujo de datos de un websocket 
  */ 
@@ -31,32 +32,5 @@ object USerLog extends App {
     
     //imprime los 10 primeros de cada RDD
     userreqs.print()
-    
-    //se establece un directorio "checkpoint" path para almacenar Required to prevent infinite lineages
-    ssc.checkpoint("checkpoints")
-    
-    //calculo de un DStream a partir de estado previos actualizados con el batch actual
-    val totalUserreqs = userreqs.updateStateByKey(updateCount)
-    
-    totalUserreqs.print
-    
-    
-    
-    
-    
-    //no se realizan operaciones sobre el DStreams hasta que se se le da al start
-    ssc.start()
-    
-    //awaitTermination waits for all background threads to complete before
-    //ending the main thread
-    ssc.awaitTermination()
-    
-    
-   def updateCount = (newCounts: Seq[Int], state: Option[Int] ) => {
-      val newCount = newCounts.foldLeft(0)(_+_)
-      val previousCount = state.getOrElse(0)
-      Some(newCount + previousCount)
-   }
-    
-    
+ 
 }
