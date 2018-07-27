@@ -1,4 +1,4 @@
-package intro.df
+package intro.sql.df
 
 import org.apache.spark.sql.SparkSession
 

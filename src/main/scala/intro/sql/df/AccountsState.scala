@@ -1,16 +1,16 @@
-package intro.df
+package intro.sql.df
 
 import org.apache.spark.sql.SparkSession
 
 /**
  * DataFrames - org.apache.spark.sql.DataFrame
  * Objeto con datos estructurados como una tabla: coleccion inmutable de objetos de tipo Row (parecido a una tupla)
- * Internamente genera un esquema 
+ * Internamente genera un esquema. Conceptualmente son equivalentes a las tablas de una BBDD relacional
  * 
  * Es una evolucion de los RDD y requieren un Spark Session
  * Spark Session
- * Es el intermediario entre spark y el programa (En el codigo al principio hay que llamar a SparkSession, en la shell se crea este objeto por defecto)
- * La clase SparkSession provee funciones y atributos para acceder a las funcionalidades de Spark
+ * 		Es el intermediario entre spark y el programa (En el codigo al principio hay que llamar a SparkSession, en la shell se crea este objeto por defecto)
+ * 		La clase SparkSession provee funciones y atributos para acceder a las funcionalidades de Spark
  */
 object AccountsState extends App {
     

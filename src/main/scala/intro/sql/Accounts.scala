@@ -4,14 +4,8 @@ import org.apache.spark.sql.SparkSession
 
 
 /**
- * You can query using SQL in addition to DataFrame and Dataset operations
-─ Incorporates SQL queries into procedural development
-▪ You can use SQL with Hive tables and temporary views
-─ Temporary views let you use SQL on data in DataFrames and Datasets
-▪ SQL queries and DataFrame/Dataset queries are equivalent
-─ Both are optimized by Catalyst
-▪ The Catalog API lets you list and describe tables, views, and columns, choose a
-database, or delete a view
+ * Spark SQL se utiliza datos estructurados mediante DataFrames.
+ * La API de Spark SQL permite la conexión a las fuentes de origen, obteniendo así los datos y pasando a ser gestionados en memoria mediante Spark.
  */
 object Accounts extends App {
   
@@ -25,7 +19,7 @@ object Accounts extends App {
     val accountsDF = spark.read.table("accounts")
     accountsDF.printSchema
     
-    val firstLastDF = spark.sql("SELECT first_name,last_name FROM accounts")
+    val firstLastDF = spark.sql("SELECT first_name, last_name FROM accounts")
     firstLastDF.printSchema
     firstLastDF.show(5)
     

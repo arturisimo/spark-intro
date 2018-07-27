@@ -9,49 +9,45 @@ import org.apache.spark.sql.SparkSession
  * RDD Resilient Distributed Dataset
  * Representa una coleccion distribuidad de elemwntos (de cualquier tipo). No tiene estructura
  * 
- * 
  * generacion a partir de un objeto en memoria val myRDD = sc.parallelize(myData)
  * 
  * RDDs se generan a partir de datos:
  * 
  * ─ Text files and other data file formats
-─ Data in other RDDs
-─ Data in memory
-─ DataFrames and Datasets
-▪ RDDs contain unstructured data
-─ No associated schema like DataFrames and Datasets
-▪ RDD Operations
-─ Transformations create a new RDD based on an existing one
-─ Actions return a value from an RDD
-
-▪ An RDD query consists of a sequence of one or more transformations
-completed by an action
-▪ RDD queries are executed lazily
-─ When the action is called
-▪ RDD queries are executed differently than DataFrame and Dataset queries
-─ DataFrames and Datasets scan their sources to determine the schema
-eagerly (when created)
-─ RDDs do not have schemas and do not scan their sources before loading
-
-PARTICIONES
-
-	Jobs —a set of tasks executed as a result of an action
-  Stage —a set of tasks in a job that can be executed in parallel
-	Task—an individual unit of work sent to one executor
-	Application—the set of jobs managed by a single driver
-
-	Las particiones de Spark de dividen en varios ejecutores en la apliacion
-		- Executors execute query tasks that process the data in their partitions
-		- Narrow operations like map and filter are pipelined within a single stage
-─ Wide operations like groupByKey and join shuffle and repartition data
-between stages
-▪ Jobs consist of a sequence of stages triggered by a single action
-▪ Jobs execute according to execution plans
-─ Core Spark creates RDD execution plans based on RDD lineages
-─ Catalyst builds optimized query execution plans
-▪ You can explore how Spark executes queries in the Spark Application UI
-
-
+ * ─ Data in other RDDs
+ * ─ Data in memory
+ * ─ DataFrames and Datasets
+ * 
+ * RDDs contine datos sin esctrucuta no tiene un esquema asociado
+ * 
+ * Operaciones RDD 
+ *  ─ Transformaciones generar un RDD a partir de otro 
+ *  ─ Actiones devuelve un valor a partir del RDDs return a value from an RDD
+ *  
+ *  Una query RDD consiste en una secuencia de transformaciones ejecutadas por una accion:
+ *  Las RDD se ejecutan de forma LAZY cuando las invoca una acción
+ *  
+ *	
+ *	PARTICIONES
+ *	
+ *	Ver particiones de un RDD: myRDD.getNumPartitions
+ *	
+ *		Task   unidad de trabajo que se ejecuta
+ *		Stage  Conjunto de tareas asociados a un job que se pueden ejecutar en paralelo
+ *		Jobs — Secuncia de stages como resultado de una accion
+ *	  Application conjunto de jobs manejador por un único driver
+ *	
+ *		Las particiones de Spark de dividen en varios ejecutores en la apliacion
+ *			- Executors execute query tasks that process the data in their partitions
+ *			- Narrow operations like map and filter are pipelined within a single stage
+ *	─ Wide operations like groupByKey and join shuffle and repartition data
+ *	between stages
+ *	
+ *	Los jons se ejecutan de acuerdo a un plan de ejccucion
+ *	─ Core Spark creates RDD execution plans based on RDD lineages
+ *	─ Catalyst builds optimized query execution plans
+ *	
+ *	  En HUE hay un Job browser
  * 
  */
 object ActivationModels extends App {

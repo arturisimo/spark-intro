@@ -613,5 +613,60 @@ seconds
 ▪ Returns results of RDD operations in batches
 
 
+============================================== DATA SOURCES
+
+Advanced data sources
+─ Apache Kafka
+─ Apache Flume
+─ Twitter
+─ ZeroMQ
+─ Amazon Kinesis
+
+Data Sources estan basado en receivers
+─ Los datos se reciben en un worker nodo
+─ El Receiver distribuye los RDD al cluster en particiones
 
 
+Apache Flume es un sistema de colecciones de datos en tiempo real escalable, extensible
+
+Un evento Flume incluye metadata en un header (metadata) and a payload containing event
+data
+─ Example event: a line of web server log output
+▪ Flume agents are configured with a source and a sink
+─ A source receives events from an external system
+─ A sink sends events to their destination
+▪ Types of sources include server output, Kafka messages, HTTP requests, and files
+▪ Types of sinks include Spark Streaming applications, HDFS directories, Apache
+Avro, and Kafka
+
+─ Now widely used for collection of any streaming event data
+─ Supports aggregating data from many sources into HDFS
+
+
+Un DStream puede recibir datos de Flume. Un receiver funciona 
+─ Push-based
+─ Pull-based
+▪ Push-based
+─ One Spark executor must run a network receiver on a specified host
+─ Configure Flume with an Avro sink to send to that receiver on that host
+
+▪ Pull-based
+─ Uses a custom Flume sink in spark.streaming.flume package
+─ Strong reliability and fault tolerance guarantees
+
+
+============================================
+KAFKA 
+
+Apache Kafka es un servicio de mensajeria rapido, escalable, distribuido (tolerante a fallos)
+─ Los mensajes se persiste en disco 
+
+Concepto
+- Productor programas que publican mensajes en el topic
+- Mensaje
+- Brokers(En cluster) reciben almacenan y distribuyen mensajes.
+- Topic receptaculo de mensajes. Cola de mensajeria. Pueden estar particionados
+- Consumidor reciben los mensajes del Tópic (Se suscriben al topic)
+
+▪ A message is a single data record passed by Kafka
+▪ One or more brokers in a cluster receive, store, and distribute messages

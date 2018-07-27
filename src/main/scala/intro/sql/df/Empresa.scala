@@ -1,13 +1,15 @@
-package intro.df
+package intro.sql.df
 
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._ 
 
 /**
- * DataFrames lee datos de distintas fuentes 
+ * DataFrames pueden ser construidos a partir de diversas fuentes de datos:
+ * 
  * ─ ficheros planos: CSV ─ JSON ─ Plain text - Semi-estrucurados su estructura se puede inferir de la cabecera o de los datos 
  * ─ Binarios : Apache Parquet ─ Apache ORC - Datos Estructurados
- * ─ Tablas: Hive metastore ─ JDBC
+ * ─ Tablas: Hive metastore ─ JDBC - Cassandra
+ * - RDD existente
  * 
  * Se referencian con URI absolutas o relativas:
  *  myfile.json
