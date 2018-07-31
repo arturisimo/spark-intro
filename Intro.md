@@ -670,3 +670,142 @@ Concepto
 
 ▪ A message is a single data record passed by Kafka
 ▪ One or more brokers in a cluster receive, store, and distribute messages
+
+Crear un Kafka topic (cola de mensajeria)
+$ kafka-topics --create --zookeeper master-1:2181 --replication-factor 1 --partitions 2 --topic weblogs
+
+listar topics
+$ kafka-topics --list --zookeeper master-1:2181
+
+detalle del topic
+$ kafka-topics --describe weblogs --zookeeper master-1:2181
+
+|	Topic:weblogs	PartitionCount:2	ReplicationFactor:1	Configs:
+|		Topic: weblogs	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
+|		Topic: weblogs	Partition: 1	Leader: 0	Replicas: 0	Isr: 0
+
+arrancar productor kakfa
+kafka-console-producer --broker-list master-1:2181 --topic weblogs
+
+arrancar consumidor kakfa
+kafka-console-consumer --zookeeper master-1:2181 --topic weblogs --from-beginning
+
+========================= FLUME ejercicio 111
+
+hdfs dfs -mkdir -p /loudacre/weblogs_flume
+
+//Start the Flume agent using the configuration you just reviewed
+$ flume-ng agent --conf /etc/flume-ng/conf --conf-file $DEVSH/exercises/flume/spooldir.conf --name agent1 -Dflume.root.logger=INFO,console
+
+
+copy-move-weblogs.sh /home/training/training_materials/devsh/data/flume/weblogs_spooldir
+
+
+# spooldir.conf: A Spooling Directory Source
+
+# Name the components on this agent
+agent1.sources = shakespeare
+agent1.sinks = hdfs-sink
+agent1.channels = channel
+
+# Describe/configure the source
+agent1.sources.shakespeare.type = exec
+agent1.sources.shakespeare.command = tail -f /tmp/flume
+agent1.sources.shakespeare.channels = memory-channel
+
+# Describe the sink
+agent1.sinks.hdfs-sink.type = hdfs
+agent1.sinks.hdfs-sink.hdfs.path = /home/training/flume/
+agent1.sinks.hdfs-sink.channel = channel
+agent1.sinks.hdfs-sink.hdfs.rollInterval = 0
+agent1.sinks.hdfs-sink.hdfs.rollSize = 524288
+agent1.sinks.hdfs-sink.hdfs.rollCount = 0
+agent1.sinks.hdfs-sink.hdfs.fileType = DataStream
+
+a1.sinks.hdfs-sink.type = hdfs
+a1.sinks.hdfs-sink.channel = channel
+a1.sinks.hdfs-sink.hdfs.path = /user/training/flume/%y-%m-%d
+a1.sinks.hdfs-sink.hdfs.filePrefix = flume-%y-%m-%d
+a1.sinks.hdfs-sink.hdfs.rollSize = 1048576
+a1.sinks.hdfs-sink.hdfs.rollCount = 100
+a1.sinks.hdfs-sink.hdfs.rollInterval = 120
+a1.sinks.hdfs-sink.hdfs.fileType = DataStream
+a1.sinks.hdfs-sink.hdfs.idleTimeout = 10
+a1.sinks.hdfs-sink.hdfs.useLocalTimeStamp = true
+
+
+# Use a channel which buffers events in memory
+agent1.channels.channel.type = FILE
+agent1.channels.channel.capacity = 100000
+agent1.channels.channel.transactionCapacity = 1000
+
+
+
+Hay que crear un agente que tenga como source exec con la salida del
+comando tail -F /tmp/flume y como sink hdfs con las siguientes condiciones:
+1. Los ficheros que se crean en hdfs deben tener un tamaño aproximado de
+524.288 bytes. No queremos que haya ficheros con un tamaño inferior a
+524.288 excepto cuando se produza la situación descrita en el punto 2.
+
+2. Después de 30 segundos en los que no haya input el fichero con extensión
+tmp se debe cerrar.
+
+3. En el sink, aparte de otros, hay que especificar los siguientes parámetros:
+a. hdfs.rollCount
+b. hdfs.rollInterval
+c. hdfs.rollSize
+d. hdfs.idleTimeout
+
+4. El directorio de destino debe ser /user/training/flume.
+El script generar_datos.sh coge el fichero shakespeare.txt y cada milésima de
+segundo añade una línea al fichero /tmp/flume.
+generar_datos.sh
+while read line
+do
+echo "$line"
+sleep 0.001
+done < shakespeare.txt >> /tmp/flume
+
+Los pasos a seguir a la hora de ejecutar el ejercicio son:
+1. Ejecutar > /tmp/flume para crear el fichero vacío /tmp/flume
+2. Arrancar el agente
+3. Ejecutar ./generar_datos.sh para mandar línea al fichero /tmp/flume
+
+
+===================================Flafka
+
+
+#consumidor
+kafka-console-consumer   --zookeeper master-1:2181   --topic weblogs
+
+#agente
+flume-ng agent --conf /etc/flume-ng/conf --conf-file $DEVSH/exercises/flafka/spooldir_kafka.conf --name agent1 -Dflume.root.logger=INFO,console
+
+[training@localhost ~]$ $DEVSH/scripts/copy-move-weblogs.sh /home/training/training_materials/devsh/data/flume/weblogs_spooldir
+
+
+
+# spooldir_kafka.conf: A Spooling Directory Source with a Kafka Sink
+
+# Name the components on this agent
+agent1.sources = webserver-log-source
+agent1.sinks = kafka-sink
+agent1.channels = memory-channel
+
+# Configure the source
+agent1.sources.webserver-log-source.type = spooldir
+agent1.sources.webserver-log-source.spoolDir = /flume/weblogs_spooldir
+agent1.sources.webserver-log-source.channels = memory-channel
+
+# Configure the sink
+agent1.sinks.kafka-sink.type = org.apache.flume.sink.kafka.KafkaSink
+agent1.sinks.kafka-sink.topic = weblogs
+agent1.sinks.kafka-sink.brokerList = master-1:9092
+agent1.sinks.kafka-sink.batchSize = 20
+agent1.sinks.kafka-sink.channel = memory-channel
+
+
+# Use a channel which buffers events in memory
+agent1.channels.memory-channel.type = memory
+agent1.channels.memory-channel.capacity = 100000
+agent1.channels.memory-channel.transactionCapacity = 1000
