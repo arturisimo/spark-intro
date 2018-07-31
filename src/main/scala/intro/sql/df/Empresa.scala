@@ -25,8 +25,10 @@ object Empresa extends App {
       //import a HDFS empresa.csv
       //$ hdfs dfs -put empresa.csv /loudacre/empresa.csv
 
-      // df empresa.csv
-      val empresaDF = spark.read.format("csv").option("inferSchema", "true").option("header", "true").load("/loudacre/empresa.csv")
+      // df empresa.csv inferSchema infiere el tipo de cada campo. Header true dice que tiene una cabecera
+      val empresaDF = spark.read.format("csv").option("inferSchema", "true")
+                                              .option("header", "true")
+                                              .load("/loudacre/empresa.csv")
 
       /* un dataframe tiene un esquema
     scala> empresaDF.printSchema

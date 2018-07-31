@@ -39,8 +39,7 @@ object Windows  extends App {
     val logs = ssc.socketTextStream(hostname, port)
     
     //Cada 30s cuenta las peticiones realizadas en los ultimos 5min 
-    val reqcountsByWindow = logs.map(line => (line.split(' ')(2),1)).    
-                                .reduceByKeyAndWindow((v1: Int, v2: Int) => v1+v2, Minutes(5), Seconds(30))
+    val reqcountsByWindow = logs.map(line => (line.split(' ')(2),1)).reduceByKeyAndWindow((v1: Int, v2: Int) => v1+v2, Minutes(5), Seconds(30))
     
     //imprimimos las que tiene mas peticiones
     //val topreqsByWindow = reqcountsByWindow.map(pair => pair.swap).transform(rdd => rdd.sortByKey(false))

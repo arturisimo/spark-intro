@@ -18,6 +18,8 @@ import org.apache.spark.streaming.dstream.DStream.toPairDStreamFunctions
  * Ejecutar spark
  * 		spark2-submit --class intro.stream.StreamingLogsMB --master yarn --conf spark.default.parallelism=4  target/spark-intro-1.0.jar gateway 1234
  * 
+ * 
+ * 
  */
 object StreamingLogsMB  extends App {
 
